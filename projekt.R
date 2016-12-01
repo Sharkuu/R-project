@@ -23,14 +23,60 @@ dotplot(mean~ Name, data = public.electricity.heat)
 public.electricity.heat[which.min(public.electricity.heat$mean),]
 
 
-for(i in 1:nrow(public.electricity.heat)){
-  if(i==1){
-  plot(names(public.electricity.heat)[5:43],public.electricity.heat[1,5:43],type = "l", col = 1, ylim=c(0,13))
-    
-  }else{
+#for(i in 1:nrow(public.electricity.heat)){
+ # if(i==1){
+  #plot(names(public.electricity.heat)[5:43],public.electricity.heat[1,5:43],type = "l", col = 1, ylim=c(0,13))
+   # 
+  #}else{
   
     
-    lines(names(public.electricity.heat)[5:43],public.electricity.heat[i,5:43],type = "l", col = i)
-  }
+   # lines(names(public.electricity.heat)[5:43],public.electricity.heat[i,5:43],type = "l", col = i)
+  #}
+  
+#}
+country_names <- unique(data.ch4$Name)
+iso_a3 <-unique(data.ch4$ISO_A3)
+
+srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = (unique(data.ch4$ISO_A3)),
+                                                        Name = country_names,
+                                                        date1970.1980 = NA,
+                                                        date1981.1990 = NA,
+                                                        date1991.2000 =NA,
+                                                        date2001.2008 = NA,
+                                                        summary.mean = NA
+                                                        )
+
+for(i in country_names){
+  x<-data.ch4[data.ch4$Name == i,]
+  k<-x[,5:15]
+  s<-rowMeans(k,na.rm = TRUE)
+  m<-mean(s,na.rm = TRUE)
+  srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name == i,3] <-m
+  
+  k<-x[,12:25]
+  s<-rowMeans(k,na.rm = TRUE)
+  m<-mean(s,na.rm = TRUE)
+  srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name == i,4] <-m
+  
+  k<-x[,22:35]
+  s<-rowMeans(k,na.rm = TRUE)
+  m<-mean(s,na.rm = TRUE)
+  srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name == i,5] <-m
+  
+  k<-x[,32:43]
+  s<-rowMeans(k,na.rm = TRUE)
+  m<-mean(s,na.rm = TRUE)
+  srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name == i,6] <-m
+  
+  
   
 }
+rm(k,s,m,x)
+#srednia calosciowa i segregowanie
+srednie.wszystkie.panstwa.wszystkie.zrodla$summary.mean <-rowMeans(srednie.wszystkie.panstwa.wszystkie.zrodla[,3:6])
+srednie.wszystkie.panstwa.wszystkie.zrodla<- srednie.wszystkie.panstwa.wszystkie.zrodla[with(srednie.wszystkie.panstwa.wszystkie.zrodla, order(-summary.mean)), ]
+#barcharty 3 najwiekszych(w tym polska)   ####SKALA!!!!!!!!!
+barchart(Name ~ date1970.1980, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,3)])
+barchart(Name ~ date1981.1990, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,4)])
+barchart(Name ~ date1991.2000, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,5)])
+barchart(Name ~ date2001.2008, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,6)])
