@@ -11,7 +11,6 @@ names(data.ch4) <- sapply(read.csv2("v4.2_CH4_tot_1970_2008.csv")[9,3:45], as.ch
 #data.ch4[is.na(data.ch4)] <-0.0
 na.omit(data.ch4)
 
-plot(names(data.ch4)[5:43],data.ch4[1,5:43],type = "l")
 
 public.electricity.heat<-subset(data.ch4, data.ch4[,4] == "Public electricity and heat production")
 
@@ -23,22 +22,8 @@ dotplot(mean~ Name, data = public.electricity.heat)
 public.electricity.heat[which.min(public.electricity.heat$mean),]
 
 
-#for(i in 1:nrow(public.electricity.heat)){
- # if(i==1){
-  #plot(names(public.electricity.heat)[5:43],public.electricity.heat[1,5:43],type = "l", col = 1, ylim=c(0,13))
-   # 
-  #}else{
-  
-    
-   # lines(names(public.electricity.heat)[5:43],public.electricity.heat[i,5:43],type = "l", col = i)
-  #}
-  
-#}
-country_names <- unique(data.ch4$Name)
-iso_a3 <-unique(data.ch4$ISO_A3)
-
-srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = (unique(data.ch4$ISO_A3)),
-                                                        Name = country_names,
+srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = unique(data.ch4$ISO_A3),
+                                                        Name = unique(data.ch4$Name),
                                                         date1970.1980 = NA,
                                                         date1981.1990 = NA,
                                                         date1991.2000 =NA,
@@ -46,7 +31,7 @@ srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = (unique(data.ch
                                                         summary.mean = NA
                                                         )
 
-for(i in country_names){
+for(i in unique(data.ch4$Name)){
   x<-data.ch4[data.ch4$Name == i,]
   k<-x[,5:15]
   s<-rowMeans(k,na.rm = TRUE)
@@ -79,7 +64,7 @@ barchart(Name ~ date2001.2008, data = srednie.wszystkie.panstwa.wszystkie.zrodla
 
 
 #######dla kazdego zrodla, wszystkie panstwa, dekadowo
-source_names <- unique(data.ch4$IPCC_description)
+ 
 
 srednie.wszystkie.zrodla = data.frame(zrodlo = unique(data.ch4$IPCC_description),
                                                         date1970.1980 = NA,
@@ -89,7 +74,7 @@ srednie.wszystkie.zrodla = data.frame(zrodlo = unique(data.ch4$IPCC_description)
                                                         summary.mean = NA
 )
 
-for (i in source_names) {
+for (i in unique(data.ch4$IPCC_description)) {
   x<-data.ch4[data.ch4$IPCC_description == i,]
   k<-x[,5:15]
   s<-rowMeans(k,na.rm = TRUE)
