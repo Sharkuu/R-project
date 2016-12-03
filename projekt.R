@@ -11,7 +11,7 @@ names(data.ch4) <- sapply(read.csv2("v4.2_CH4_tot_1970_2008.csv")[9,3:45], as.ch
 #data.ch4[is.na(data.ch4)] <-0.0
 na.omit(data.ch4)
 
-
+####################to trzeba zmienic bo to dotplot tylko dla elektrowni i cieplowni
 public.electricity.heat<-subset(data.ch4, data.ch4[,4] == "Public electricity and heat production")
 
 public.electricity.heat$mean <- rowMeans(public.electricity.heat[,5:43])
@@ -20,7 +20,7 @@ public.electricity.heat$mean <- rowMeans(public.electricity.heat[,5:43])
 dotplot(mean~ Name, data = public.electricity.heat)
 
 public.electricity.heat[which.min(public.electricity.heat$mean),]
-
+##########################################################################3
 
 srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = unique(data.ch4$ISO_A3),
                                                         Name = unique(data.ch4$Name),
