@@ -127,3 +127,55 @@ for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
   j<- j+1
 }}
 
+
+# Mapka testy
+# TODO or NOT TODO
+# a. Plotować tylko nazwy panstw, ktore sa z europy i maja wartosci
+# b. Rozwiazac problem z serbia i czarnogura
+# c. Pomyslec czy mozna zrobic tak, zeby nazwy panstw sie nie zaslanialy
+#    (Customowe nazwy panstw i kooordynaty, zakomentowana opcja)
+# d. Plotowanie wartości przy panstwie?
+
+library(rworldmap)
+
+
+map.frame <- data.frame(
+  country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
+  value=srednie.wszystkie.panstwa.wszystkie.zrodla$date1970.1980)
+
+converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
+
+
+pdf('Europa_rozklad.pdf')
+
+# Poprzedni sposob zapisu do png, ale słaba jakosc niestety wychodzi 
+#
+# mapDevice(
+#   device = 'png',filename='test.png',rows = 1,columns = 1,plotOrder="rows",
+#   width = 1000,height = 1000,titleSpace = NULL,xaxs = "i",yaxs = "i")
+
+mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1970-1980",
+               mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
+               aspect=1.5,borderCol = "gray20",oceanCol="lightcyan2",
+               catMethod =c(seq(0,400,by = 10)),addLegend = FALSE)
+#catMethod ="pretty"
+
+do.call( addMapLegend, c( mapParams, legendLabels="all", legendWidth=0.5 ))
+
+labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
+               nameColumnToPlot= "value",col = 'black',cex = 0.4)
+
+
+#Stare nazywanie nazw
+#
+# Coordynaty
+#country_coord<-data.frame(coordinates(n),stringsAsFactors=F)
+# Nazwy panstw
+#text(x=country_coord$X1,y=country_coord$X2,labels=row.names(country_coord),cex=0.5)
+#
+#Krotszy sposob nazw
+#text(n, labels="NAME")
+#
+
+dev.off()
+
