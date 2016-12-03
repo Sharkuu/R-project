@@ -127,7 +127,21 @@ for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
   j<- j+1
 }}
 
-
+####problem jest taki ze to sa srednie z dekad, a to nie moze byc jako wartosc x'a dlatego jest c(1970,1980,1990,2000)
+sasiedzi <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Germany" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Ukraine" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Czech Republic" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Slovakia" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Belarus" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Lithuania" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Poland",]
+j<-1
+for (i in 1:nrow(sasiedzi)) {
+    if(j==1){
+        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l", col = j,ylim = c(0,350), ylab = "srednia", xlab = "Dekada(nie do konca BO LE")
+        j <- j+1
+      }
+    else{
+        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l", col = j)
+        j <- j+1
+        
+        }
+    
+    }
 
 # Mapka testy
 # TODO or NOT TODO
