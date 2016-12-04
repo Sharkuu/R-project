@@ -132,7 +132,7 @@ sasiedzi <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa
 j<-1
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
-        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l", col = j,ylim = c(0,350), ylab = "srednia", xlab = "Dekada(nie do konca BO �LE")
+        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l", col = j,ylim = c(0,350), ylab = "srednia", xlab = "Dekada(nie do konca BO ?LE")
         j <- j+1
       }
     else{
@@ -193,3 +193,29 @@ labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
 #
 
 dev.off()
+
+
+
+# Mapy drugiego typu, Heatmapa
+# in progress, problemy są z legendą
+
+
+data.heat <- read.csv2("v42_CH4_1970_TOT.txt",skip = 3,stringsAsFactors = FALSE, header = F)
+num_data <- data.frame(data.matrix(data.heat))
+
+library(maptools)
+library(png)
+
+map1 <- readShapePoly("CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp")
+coordinates(num_data) <- ~V2+V1  
+gridded(num_data) <- TRUE
+
+png(file="Map3.png",width=35,height=30,unit="cm", res=200, type = "cairo")
+at <- c(0e+0, 1.5e-5, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0e+0, 2.0e+0, 1.0e+1, 1.0e+2, 2.0e+2,5.0e+2)
+spplot(num_data["V3"], xlim=c(-5,35), ylim=c(35,70),
+       sp.layout = list("sp.polygons",map1),
+       contour=F,at=at
+       #colorkey=list(at=seq(0, 400, 30))
+)
+dev.off()
+
