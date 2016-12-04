@@ -210,12 +210,24 @@ map1 <- readShapePoly("CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp")
 coordinates(num_data) <- ~V2+V1  
 gridded(num_data) <- TRUE
 
-png(file="Map3.png",width=35,height=30,unit="cm", res=200, type = "cairo")
-at <- c(0e+0, 1.5e-5, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0e+0, 2.0e+0, 1.0e+1, 1.0e+2, 2.0e+2,5.0e+2)
-spplot(num_data["V3"], xlim=c(-5,35), ylim=c(35,70),
-       sp.layout = list("sp.polygons",map1),
-       contour=F,at=at
-       #colorkey=list(at=seq(0, 400, 30))
-)
+# Poprzednia wersja
+#
+# png(file="Map3.png",width=35,height=30,unit="cm", res=200, type = "cairo")
+# 
+# spplot(num_data["V3"], xlim=c(-5,35), ylim=c(35,70),
+#        sp.layout = list("sp.polygons",map1),
+#        contour=F,at=at
+#        #colorkey=list(at=seq(0, 400, 30))
+# )
+
+at <- c(0e+0, 1.5e-5, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0e+0, 2.0e+0, 1.0e+1, 1.0e+2, 2.0e+2,5.0e+2,1.0e+3,5.0e+3)
+png(file="Map4.png",width=35,height=30,unit="cm", res=200, type = "cairo")
+num_data@data$cutV3 <- cut(num_data@data$V3, breaks = at) # converted numeric to factor
+ 
+spplot(num_data["cutV3"], xlim=c(-5, 35), ylim=c(35, 70), 
+        colorkey = list(height = 1, labels = list(at = seq(0.5, length(at) -0.5), labels = at)),
+        sp.layout = list("sp.polygons", map1, first = F), contour = F)
+ 
+
 dev.off()
 
