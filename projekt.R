@@ -106,6 +106,7 @@ for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
 ####problem jest taki ze to sa srednie z dekad, a to nie moze byc jako wartosc x'a dlatego jest c(1970,1980,1990,2000)
 sasiedzi <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Germany" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Ukraine" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Czech Republic" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Slovakia" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Belarus" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Lithuania" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Poland",]
 j<-1
+par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
         plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l",xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia", xlab = "Dekada", main = "Polska na tle sasiadow")
@@ -118,10 +119,10 @@ for (i in 1:nrow(sasiedzi)) {
       
         j <- j+1
         
-        }
-    
     }
-
+    
+}
+legend('topright','groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(2.5,2.5),col=c(1:nrow(sasiedzi))) 
 # Mapka testy
 # TODO or NOT TODO
 # a. Plotować tylko nazwy panstw, ktore sa z europy i maja wartosci
