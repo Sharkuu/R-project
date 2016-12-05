@@ -109,12 +109,12 @@ j<-1
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
-        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l",xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia", xlab = "Dekada", main = "Polska na tle sasiadow")
+        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia", xlab = "Dekada", main = "Polska na tle sasiadow")
         axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
         j <- j+1
       }
     else{
-        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l", col = j)
+        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o", col = j)
       axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
       
         j <- j+1
