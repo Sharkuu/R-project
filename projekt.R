@@ -11,16 +11,6 @@ names(data.ch4) <- sapply(read.csv2("v4.2_CH4_tot_1970_2008.csv")[9,3:45], as.ch
 na.omit(data.ch4)
 
 
-#public.electricity.heat<-subset(data.ch4, data.ch4[,4] == "Public electricity and heat production")
-
-#public.electricity.heat$mean <- rowMeans(public.electricity.heat[,5:43])
-
-######nie wiem ktore wartosci zrobic na dotplocie
-#dotplot(mean~ Name, data = public.electricity.heat)
-
-#public.electricity.heat[which.min(public.electricity.heat$mean),]
-
-
 
 srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = (unique(data.ch4$ISO_A3)),
                                                         Name = unique(data.ch4$Name),
@@ -95,6 +85,65 @@ barchart(date2001.2008~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
+##########polska emisje
+polska.srednie <-data.frame(zrodlo = unique(data.ch4$IPCC_description),
+                            date1970.1980 = NA,
+                            date1981.1990 = NA,
+                            date1991.2000 =NA,
+                            date2001.2008 = NA)
+poland <- data.ch4[data.ch4$Name=='Poland',]
+na.omit(poland)
+for (i in unique(poland$IPCC_description)) {
+  x<-data.ch4[data.ch4$IPCC_description == i,]
+  
+  s<-rowMeans(x[,5:15],na.rm = TRUE)
+  polska.srednie[polska.srednie$zrodlo == i,2] <-mean(s,na.rm = TRUE)
+  
+  s<-rowMeans(x[,12:25],na.rm = TRUE)
+  polska.srednie[polska.srednie$zrodlo == i,3] <-mean(s,na.rm = TRUE) 
+  
+  s<-rowMeans(x[,22:35],na.rm = TRUE)
+  polska.srednie[polska.srednie$zrodlo == i,4] <-mean(s,na.rm = TRUE)
+  
+  s<-rowMeans(x[,32:43],na.rm = TRUE)
+  polska.srednie[polska.srednie$zrodlo == i,5] <-mean(s,na.rm = TRUE) 
+  
+}
+#sortowanie
+#polska.srednie<- polska.srednie[with(polska.srednie, order(-date1970.1980)), ]
+barchart(date1970.1980~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
+         col = "orange",
+         main = "Polska lata 1970-1980",
+         ylab = "Srednia [Gg]",
+         panel=function(x,y,subscripts,...){
+           panel.grid(h=15,v=0) 
+           panel.barchart(x,y,...)
+         })
+barchart(date1981.1990~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
+         col = "orange",
+         main = "Polska lata 1981-1990",
+         ylab = "Srednia [Gg]",
+         panel=function(x,y,subscripts,...){
+           panel.grid(h=15,v=0) 
+           panel.barchart(x,y,...)
+         })
+barchart(date1991.2000~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
+         col = "orange",
+         main = "Polska lata 1991-2000",
+         ylab = "Srednia [Gg]",
+         panel=function(x,y,subscripts,...){
+           panel.grid(h=15,v=0) 
+           panel.barchart(x,y,...)
+         })
+barchart(date2001.2008~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
+         col = "orange",
+         main = "Polska lata 2001-2008",
+         ylab = "Srednia [Gg]",
+         panel=function(x,y,subscripts,...){
+           panel.grid(h=15,v=0) 
+           panel.barchart(x,y,...)
+         })
+
 #######dla kazdego zrodla, wszystkie panstwa, dekadowo
 srednie.wszystkie.zrodla = data.frame(zrodlo = unique(data.ch4$IPCC_description),
                                                         date1970.1980 = NA,
@@ -159,6 +208,8 @@ for (i in 1:nrow(sasiedzi)) {
     
 }
 legend('topright','groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(2.5,2.5),col=c(1:nrow(sasiedzi))) 
+
+
 # Mapka testy
 # TODO or NOT TODO
 # a. Plotować tylko nazwy panstw, ktore sa z europy i maja wartosci
