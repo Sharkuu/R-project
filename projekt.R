@@ -140,7 +140,7 @@ map.frame <- data.frame(
 converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
 
 
-pdf('Europa_rozklad.pdf')
+pdf('Europa_rozklad70-80.pdf')
 
 # Poprzedni sposob zapisu do png, ale słaba jakosc niestety wychodzi 
 #
@@ -160,16 +160,72 @@ labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
                nameColumnToPlot= "value",col = 'black',cex = 0.4)
 
 
-#Stare nazywanie nazw
-#
-# Coordynaty
-#country_coord<-data.frame(coordinates(n),stringsAsFactors=F)
-# Nazwy panstw
-#text(x=country_coord$X1,y=country_coord$X2,labels=row.names(country_coord),cex=0.5)
-#
-#Krotszy sposob nazw
-#text(n, labels="NAME")
-#
+dev.off()
+
+######
+
+map.frame <- data.frame(
+  country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
+  value=srednie.wszystkie.panstwa.wszystkie.zrodla$date1981.1990)
+
+converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
+
+
+pdf('Europa_rozklad81-90.pdf')
+
+mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1981-1990",
+                           mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
+                           aspect=1.5,borderCol = "gray20",oceanCol="lightcyan2",
+                           catMethod =c(seq(0,400,by = 10)),addLegend = FALSE)
+
+do.call( addMapLegend, c( mapParams, legendLabels="all", legendWidth=0.5 ))
+
+labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
+               nameColumnToPlot= "value",col = 'black',cex = 0.4)
+
+dev.off()
+###
+
+map.frame <- data.frame(
+  country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
+  value=srednie.wszystkie.panstwa.wszystkie.zrodla$date1991.2000)
+
+converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
+
+
+pdf('Europa_rozklad91-00.pdf')
+
+mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1991-2000",
+                           mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
+                           aspect=1.5,borderCol = "gray20",oceanCol="lightcyan2",
+                           catMethod =c(seq(0,400,by = 10)),addLegend = FALSE)
+
+do.call( addMapLegend, c( mapParams, legendLabels="all", legendWidth=0.5 ))
+
+labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
+               nameColumnToPlot= "value",col = 'black',cex = 0.4)
+
+dev.off()
+####
+
+map.frame <- data.frame(
+  country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
+  value=srednie.wszystkie.panstwa.wszystkie.zrodla$date2001.2008)
+
+converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
+
+
+pdf('Europa_rozklad01-08.pdf')
+
+mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 2001-2008",
+                           mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
+                           aspect=1.5,borderCol = "gray20",oceanCol="lightcyan2",
+                           catMethod =c(seq(0,400,by = 10)),addLegend = FALSE)
+
+do.call( addMapLegend, c( mapParams, legendLabels="all", legendWidth=0.5 ))
+
+labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
+               nameColumnToPlot= "value",col = 'black',cex = 0.4)
 
 dev.off()
 
