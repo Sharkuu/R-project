@@ -108,12 +108,12 @@ sasiedzi <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa
 j<-1
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
-        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l",xaxt = "n", col = j+1,ylim = c(0,350), ylab = "Srednia", xlab = "Dekada", main = "Polska na tle sasiadow")
+        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l",xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia", xlab = "Dekada", main = "Polska na tle sasiadow")
         axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
         j <- j+1
       }
     else{
-        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l", col = j+1)
+        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "l", col = j)
       axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
       
         j <- j+1
