@@ -344,8 +344,8 @@ gridded(num_data) <- TRUE
 # )
 
 at <- c(0e+0, 1.5e-5, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0e+0, 2.0e+0, 1.0e+1, 1.0e+2, 2.0e+2,5.0e+2,1.0e+3,5.0e+3)
-png(file="Map4.png",width=35,height=30,unit="cm", res=200, type = "cairo")
-num_data@data$cutV3 <- cut(num_data@data$V3, breaks = at) # converted numeric to factor
+png(file="HeatMap.png",width=35,height=30,unit="cm", res=200, type = "cairo")
+num_data@data$cutV3 <- cut(num_data@data$V3, breaks = c(at,Inf)) # converted numeric to factor
  
 spplot(num_data["cutV3"], xlim=c(-5, 35), ylim=c(35, 70), 
         colorkey = list(height = 1, labels = list(at = seq(0.5, length(at) -0.5), labels = at)),
