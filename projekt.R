@@ -28,7 +28,7 @@ srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = (unique(data.ch
                                                         date1981.1990 = NA,
                                                         date1991.2000 =NA,
                                                         date2001.2008 = NA,
-                                                        summary.mean = NA
+                                                        summary.mean = NA,stringsAsFactors=FALSE
                                                         )
 
 for(i in unique(data.ch4$Name)){
@@ -59,6 +59,42 @@ barchart(date1991.2000 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla
 barchart(date2001.2008 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,6)], col = c(2,4,3), main = "Najwieksza emisja lata 2001-2008", ylab = "Srednia [Gg]")
 
 
+srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "MKD",2] <- "Macedonia"
+######dotplot wszystkie panstwa wszystkie zrodla
+
+barchart(date1970.1980~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
+         col = "orange",
+         main = "Srednie wartosci emisji lata 1970-1980",
+         ylab = "Srednia [Gg]",
+         panel=function(x,y,subscripts,...){
+             panel.grid(h=15,v=0) 
+             panel.barchart(x,y,...)
+         })
+
+barchart(date1981.1990~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
+         col = "orange",
+         main = "Srednie wartosci emisji lata 1981-1990",
+         ylab = "Srednia [Gg]",
+         panel=function(x,y,subscripts,...){
+           panel.grid(h=15,v=0) 
+           panel.barchart(x,y,...)
+         })
+barchart(date1991.2000~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
+         col = "orange",
+         main = "Srednie wartosci emisji lata 1991-2000",
+         ylab = "Srednia [Gg]",
+         panel=function(x,y,subscripts,...){
+           panel.grid(h=15,v=0) 
+           panel.barchart(x,y,...)
+         })
+barchart(date2001.2008~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
+         col = "orange",
+         main = "Srednie wartosci emisji lata 2001-2008",
+         ylab = "Srednia [Gg]",
+         panel=function(x,y,subscripts,...){
+           panel.grid(h=15,v=0) 
+           panel.barchart(x,y,...)
+         })
 #######dla kazdego zrodla, wszystkie panstwa, dekadowo
 srednie.wszystkie.zrodla = data.frame(zrodlo = unique(data.ch4$IPCC_description),
                                                         date1970.1980 = NA,
