@@ -359,3 +359,11 @@ grid.text("Roczna skala emisji metanu (tony)", x=unit(0.98, "npc"), y=unit(0.50,
 
 dev.off()
 
+
+#Petla do heatmap
+# for(i in 0:38) {
+#   file.input <- paste0("v42_CH4_",1970+i,"_TOT.txt")
+#   title <- paste0("Europa rok ",1970+i)
+#   image.output <- paste0("Europa_Heatmap_",1970+i,".png") 
+#   print(paste0(file.input," ",title," ",image.output))
+# }
