@@ -349,13 +349,13 @@ gridded(num_data) <- TRUE
 # )
 
 at <- c(0e+0, 1.5e-5, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0e+0, 2.0e+0,5.0e+0, 1.0e+1,5.0e+1, 1.0e+2, 2.0e+2,5.0e+2,1.0e+3,5.0e+3)
-png(file="HeatMap7.png",width=37,height=30,unit="cm", res=150, type = "cairo")
+png(file="HeatMap999.png",width=37,height=28,unit="cm", res=100, type = "cairo")
 num_data@data$cutV3 <- cut(num_data@data$V3, breaks = c(at,Inf)) # converted numeric to factor
  
-spplot(num_data["cutV3"], xlim=c(-5, 35), ylim=c(35, 70), main=list(label="Europa Xyear",cex=1.5), 
+spplot(num_data["cutV3"], xlim=c(-11, 38), ylim=c(34, 71), main=list(label="Europa Xyear",cex=1.5), 
         colorkey = list(height = 1, labels = list(at = seq(0.5, length(at) -0.5), labels = at)),col.regions=colorRampPalette(c("blue4","purple4", "yellow2", "red4")), #col.regions=rev(rainbow(24, start = 0, end = 12/24))
         sp.layout = list("sp.polygons", map1, first = F), contour = F)
-grid.text("Roczna skala emisji metanu (tony)", x=unit(0.98, "npc"), y=unit(0.50, "npc"), rot=-90, gp=gpar(fontsize=13,fontface=2))
+grid.text("Roczna skala emisji metanu (tony)", x=unit(0.99, "npc"), y=unit(0.50, "npc"), rot=-90, gp=gpar(fontsize=13,fontface=2))
 
 dev.off()
 
