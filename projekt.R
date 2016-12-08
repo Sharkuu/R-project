@@ -213,15 +213,16 @@ for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
 ##sasiedzi
 sasiedzi <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Germany" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Ukraine" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Czech Republic" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Slovakia" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Belarus" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Lithuania" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Poland",]
 j<-1
+colors.plot <-c(1,2,"orange",4,5,6,"green")
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
-        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",lwd=3,xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia [Gg]", xlab = "Dekada", main = "Polska na tle sasiadow")
+        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",lwd=3,xaxt = "n", col = colors.plot[j],ylim = c(0,350), ylab = "Srednia [Gg]", xlab = "Dekada", main = "Polska na tle sasiadow")
         axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
         j <- j+1
       }
     else{
-        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",lwd=3, col = j)
+        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",lwd=3, col = colors.plot[j])
       axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
       
         j <- j+1
@@ -229,7 +230,7 @@ for (i in 1:nrow(sasiedzi)) {
     }
     
 }
-legend('topright','groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(2.5,2.5),col=c(1:nrow(sasiedzi))) 
+legend('topright','groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(2.5,2.5),col=colors.plot) 
 
 
 # Mapka testy
