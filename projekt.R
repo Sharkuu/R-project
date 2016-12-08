@@ -201,16 +201,16 @@ j<-1
 for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
   tmp <- subset(data.ch4, data.ch4[,4] == as.name(i))
   tmp <- colMeans(tmp[,5:43],na.rm = TRUE)
- if(j==1){
-    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok", ylab = as.name(i))
-   j<-j+1
-}else{
-  print(tmp)
- plot(names(tmp),tmp,type = "l", col = j, xlab = "rok", ylab = as.name(i))
-  j<- j+1
-}}
+  if(j==1){ 
+    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok", ylab = paste(as.name(i)," [Gg]"))
+    j<-j+1
+  }else{
+    print(tmp)
+    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok", ylab = paste(as.name(i)," [Gg]"))
+    j<- j+1
+  }}
 
-####problem jest taki ze to sa srednie z dekad, a to nie moze byc jako wartosc x'a dlatego jest c(1970,1980,1990,2000)
+##sasiedzi
 sasiedzi <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Germany" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Ukraine" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Czech Republic" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Slovakia" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Belarus" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Lithuania" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Poland",]
 j<-1
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
