@@ -38,27 +38,37 @@ for(i in unique(data.ch4$Name)){
   
   
 }
-
+srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "MKD",2] <- "Macedonia"
+srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "SCG",2] <- "Serbia"
+srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "SCG",1] <- "SRB"
+tmp <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "SRB",]
+tmp$ISO_A3 <- "MNE"
+tmp$Name <- "Montenegro"
+srednie.wszystkie.panstwa.wszystkie.zrodla <- rbind(srednie.wszystkie.panstwa.wszystkie.zrodla,tmp)
+tmp$ISO_A3 <- "KVX"
+tmp$Name <- "Kosovo"
+srednie.wszystkie.panstwa.wszystkie.zrodla <- rbind(srednie.wszystkie.panstwa.wszystkie.zrodla,tmp)
 #srednia calosciowa i segregowanie
 srednie.wszystkie.panstwa.wszystkie.zrodla$summary.mean <-rowMeans(srednie.wszystkie.panstwa.wszystkie.zrodla[,3:6])
 srednie.wszystkie.panstwa.wszystkie.zrodla<- srednie.wszystkie.panstwa.wszystkie.zrodla[with(srednie.wszystkie.panstwa.wszystkie.zrodla, order(-summary.mean)), ]
 #barcharty 3 najwiekszych(w tym polska)   ####SKALA!!!!!!!!!
-a <- barchart(date1970.1980 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,3)], col = "orange", main = "Najwieksza emisja lata 1970-1980", ylab = "Srednia [Gg]")
-b <- barchart(date1981.1990 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,4)], col = "orange", main = "Najwieksza emisja lata 1981-1990", ylab = "Srednia [Gg]")
-c <- barchart(date1991.2000 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,5)], col = "orange", main = "Najwieksza emisja lata 1991-2000", ylab = "Srednia [Gg]")
-d <- barchart(date2001.2008 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,6)], col = "orange", main = "Najwieksza emisja lata 2001-2008", ylab = "Srednia [Gg]")
+a <- barchart(date1970.1980 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,3)], col = "orange", main = "Najwieksza emisja lata 1970-1980",ylim = c(0:340), ylab = "Srednia [Gg]")
+b <- barchart(date1981.1990 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,4)], col = "orange", main = "Najwieksza emisja lata 1981-1990",ylim = c(0:340), ylab = "Srednia [Gg]")
+c <- barchart(date1991.2000 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,5)], col = "orange", main = "Najwieksza emisja lata 1991-2000",ylim = c(0:340), ylab = "Srednia [Gg]")
+d <- barchart(date2001.2008 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,6)], col = "orange", main = "Najwieksza emisja lata 2001-2008",ylim = c(0:340), ylab = "Srednia [Gg]")
 print(a, split = c(1,1,4,1), more = T)
 print(b, split = c(2,1,4,1), more = T)
 print(c, split = c(3,1,4,1), more = T)
 print(d, split = c(4,1,4,1))
 
-srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "MKD",2] <- "Macedonia"
+
 ######dotplot wszystkie panstwa wszystkie zrodla
 
 barchart(date1970.1980~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Srednie wartosci emisji lata 1970-1980",
          ylab = "Srednia [Gg]",
+         ylim = c(0:340),
          panel=function(x,y,subscripts,...){
              panel.grid(h=15,v=0) 
              panel.barchart(x,y,...)
@@ -68,6 +78,7 @@ barchart(date1981.1990~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
          col = "orange",
          main = "Srednie wartosci emisji lata 1981-1990",
          ylab = "Srednia [Gg]",
+         ylim = c(0:340),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -76,6 +87,7 @@ barchart(date1991.2000~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
          col = "orange",
          main = "Srednie wartosci emisji lata 1991-2000",
          ylab = "Srednia [Gg]",
+         ylim = c(0:340),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -84,6 +96,7 @@ barchart(date2001.2008~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
          col = "orange",
          main = "Srednie wartosci emisji lata 2001-2008",
          ylab = "Srednia [Gg]",
+         ylim = c(0:340),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -118,6 +131,7 @@ barchart(date1970.1980~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
          col = "orange",
          main = "Polska lata 1970-1980",
          ylab = "Srednia [Gg]",
+         ylim = c(0:380),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -126,6 +140,7 @@ barchart(date1981.1990~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
          col = "orange",
          main = "Polska lata 1981-1990",
          ylab = "Srednia [Gg]",
+         ylim = c(0:380),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -134,6 +149,7 @@ barchart(date1991.2000~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
          col = "orange",
          main = "Polska lata 1991-2000",
          ylab = "Srednia [Gg]",
+         ylim = c(0:380),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -142,11 +158,14 @@ barchart(date2001.2008~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
          col = "orange",
          main = "Polska lata 2001-2008",
          ylab = "Srednia [Gg]",
+         ylim = c(0:380),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
-
+#######polska po 88
+polska88 <- data.ch4[data.ch4$Name=='Poland',]
+polska88 <- colMeans(polska88[,23:43], na.rm = TRUE)
 #######dla kazdego zrodla, wszystkie panstwa, dekadowo
 srednie.wszystkie.zrodla = data.frame(zrodlo = unique(data.ch4$IPCC_description),
                                                         date1970.1980 = NA,
