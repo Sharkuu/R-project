@@ -202,11 +202,11 @@ for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
   tmp <- subset(data.ch4, data.ch4[,4] == as.name(i))
   tmp <- colMeans(tmp[,5:43],na.rm = TRUE)
   if(j==1){ 
-    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok", ylab = paste(as.name(i)," [Gg]"))
+    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok",lwd=4, ylab = paste(as.name(i)," [Gg]"))
     j<-j+1
   }else{
     print(tmp)
-    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok", ylab = paste(as.name(i)," [Gg]"))
+    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok",lwd=4, ylab = paste(as.name(i)," [Gg]"))
     j<- j+1
   }}
 
@@ -216,12 +216,12 @@ j<-1
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
-        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia [Gg]", xlab = "Dekada", main = "Polska na tle sasiadow")
+        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",lwd=3,xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia [Gg]", xlab = "Dekada", main = "Polska na tle sasiadow")
         axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
         j <- j+1
       }
     else{
-        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o", col = j)
+        lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",lwd=3, col = j)
       axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
       
         j <- j+1
