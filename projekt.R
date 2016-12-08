@@ -51,7 +51,7 @@ srednie.wszystkie.panstwa.wszystkie.zrodla <- rbind(srednie.wszystkie.panstwa.ws
 #srednia calosciowa i segregowanie
 srednie.wszystkie.panstwa.wszystkie.zrodla$summary.mean <-rowMeans(srednie.wszystkie.panstwa.wszystkie.zrodla[,3:6])
 srednie.wszystkie.panstwa.wszystkie.zrodla<- srednie.wszystkie.panstwa.wszystkie.zrodla[with(srednie.wszystkie.panstwa.wszystkie.zrodla, order(-summary.mean)), ]
-#barcharty 3 najwiekszych(w tym polska)   ####SKALA!!!!!!!!!
+#barcharty 3 najwiekszych(w tym polska) 
 a <- barchart(date1970.1980 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,3)], col = "orange", main = "Najwieksza emisja lata 1970-1980",ylim = c(0:340), ylab = "Srednia [Gg]")
 b <- barchart(date1981.1990 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,4)], col = "orange", main = "Najwieksza emisja lata 1981-1990",ylim = c(0:340), ylab = "Srednia [Gg]")
 c <- barchart(date1991.2000 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,5)], col = "orange", main = "Najwieksza emisja lata 1991-2000",ylim = c(0:340), ylab = "Srednia [Gg]")
@@ -196,7 +196,7 @@ rm(s,x)
 srednie.wszystkie.zrodla$summary.mean <-rowMeans(srednie.wszystkie.zrodla[,2:5])
 srednie.wszystkie.zrodla<- srednie.wszystkie.zrodla[with(srednie.wszystkie.zrodla, order(-summary.mean)), ]
 
-####wykresy zrodel wybranych(2 top 2 middle, 2 end) rocznie (nie moga byc na jednym bo skala jest pojebana)
+####wykresy zrodel wybranych(2 top 2 middle, 2 end) rocznie
 j<-1
 for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
   tmp <- subset(data.ch4, data.ch4[,4] == as.name(i))
@@ -216,7 +216,7 @@ j<-1
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
-        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia", xlab = "Dekada", main = "Polska na tle sasiadow")
+        plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",xaxt = "n", col = j,ylim = c(0,350), ylab = "Srednia [Gg]", xlab = "Dekada", main = "Polska na tle sasiadow")
         axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
         j <- j+1
       }
