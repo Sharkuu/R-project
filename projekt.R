@@ -1,3 +1,10 @@
+# Title: Analiza rozkładu przestrzennego i czasowego emisji metanu (CH4) w skali region Europy na podstawie bazy EDGAR. 
+# Author: Paweł Sadowski, Olaf Schab; WFiIS AGH 2016
+#
+# R version: 3.3.1
+# Libraries: lattice, maptools, png, grid, rworldmap
+
+
 options(prompt = "R: " )
 # zaladowanie bibliotek ----------------------------------------------------------------------
 library(lattice)
@@ -249,7 +256,6 @@ for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
     plot(names(tmp),tmp,type = "l", col = j, xlab = "rok",lwd=4, ylab = paste(as.name(i)," [Gg]"))
     j<-j+1
   }else{
-    print(tmp)
     plot(names(tmp),tmp,type = "l", col = j, xlab = "rok",lwd=4, ylab = paste(as.name(i)," [Gg]"))
     j<- j+1
   }}
@@ -282,39 +288,34 @@ for (i in 1:nrow(sasiedzi)) {
 legend('topright','groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(2.5,2.5),col=colors.plot) 
 rm(i,j,colors.plot)
 
-# TO DLA PAWEUKA <33333333333333333333333 ---------------------------------
+# Mapa konturowa panstw ze srednimi wartosciami emisji ------------------------------------------
 
+# Europa 1970-1980
 
-# Mapka testy
-# TODO or NOT TODO
-# a. Plotować tylko nazwy panstw, ktore sa z europy i maja wartosci
-# b. Rozwiazac problem z serbia i czarnogura
-# c. Pomyslec czy mozna zrobic tak, zeby nazwy panstw sie nie zaslanialy
-#    (Customowe nazwy panstw i kooordynaty, zakomentowana opcja)
-# d. Plotowanie wartości przy panstwie?
-
+# Zmienna wczytywana do tworzenia mapy, zawiera nazwy panstw i wartosci
 map.frame <- data.frame(
   country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
   value=srednie.wszystkie.panstwa.wszystkie.zrodla$date1970.1980)
 
+
+# Funkcja z biblioteki rworldmap, ktora dopasowywuje nazwy panstw z wczytanej zmiennej do nazw panstw w bibliotece
+# Zwraca ilosc dobrze dopasowanych panstw
 converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
 
 
+# Zapis do pliku PDF
 pdf('Europa_rozklad70-80.pdf')
 
-# Poprzedni sposob zapisu do png, ale słaba jakosc niestety wychodzi 
-#
-# mapDevice(
-#   device = 'png',filename='test.png',rows = 1,columns = 1,plotOrder="rows",
-#   width = 1000,height = 1000,titleSpace = NULL,xaxs = "i",yaxs = "i")
-
+# Funkcja z biblioteki rworldmap, rysujaca mape Europy
 mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1970-1980",
                            mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
                            aspect=1.5,borderCol = "gray20",oceanCol="lightcyan2",
                            catMethod =c(seq(0,400,by = 10)),addLegend = FALSE)
 
+# Funkcja dodajaca legendę do mapy
 do.call( addMapLegend, c( mapParams, legendLabels="all", legendWidth=0.5 ))
 
+# Funkcja dodajaca nazwy panstw do mapy
 labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
                nameColumnToPlot= "value",col = 'black',cex = 0.4)
 
@@ -322,6 +323,8 @@ labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
 dev.off()
 
 ######
+# Kopia kodu opisanego powyzej
+# Europa 1981-1990
 
 map.frame <- data.frame(
   country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
@@ -344,6 +347,8 @@ labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
 
 dev.off()
 ###
+# Kopia kodu opisanego powyzej
+# Europa 1991-2000
 
 map.frame <- data.frame(
   country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
@@ -366,6 +371,8 @@ labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
 
 dev.off()
 ####
+# Kopia kodu opisanego powyzej
+# Europa 2000-2008
 
 map.frame <- data.frame(
   country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
@@ -391,43 +398,49 @@ dev.off()
 
 
 # Mapy drugiego typu, Heatmapa
-# in progress, problemy są z legendą
 
-
+# Wczytywanie danych do heatmapy
 data.heat <- read.csv2("v42_CH4_1970_TOT.txt",skip = 3,stringsAsFactors = FALSE, header = F)
+# Zmiana typu danych na numeric
 num_data <- data.frame(data.matrix(data.heat))
 
 
-
-
+# Wczytywanie mapy w formacie shapefile
+# Mapa pobrana ze strony http://ec.europa.eu/
+# http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/CNTR_2014_03M.zip
 
 map1 <- readShapePoly("CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp")
+
+# Konwertuje wspolrzedne do typu Spatial object
 coordinates(num_data) <- ~V2+V1  
 gridded(num_data) <- TRUE
 
-# Poprzednia wersja
-#
-# png(file="Map3.png",width=35,height=30,unit="cm", res=200, type = "cairo")
-# 
-# spplot(num_data["V3"], xlim=c(-5,35), ylim=c(35,70),
-#        sp.layout = list("sp.polygons",map1),
-#        contour=F,at=at
-#        #colorkey=list(at=seq(0, 400, 30))
-# )
-
+# Ustalanie wartosci progów
 at <- c(0e+0, 1.5e-5, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0e+0, 2.0e+0,5.0e+0, 1.0e+1,5.0e+1, 1.0e+2, 2.0e+2,5.0e+2,1.0e+3,5.0e+3)
-png(file="HeatMap999.png",width=37,height=28,unit="cm", res=100, type = "cairo")
-num_data@data$cutV3 <- cut(num_data@data$V3, breaks = c(at,Inf)) # converted numeric to factor
- 
+
+# Zapis mapy do pliku PNG
+png(file="HeatMap.png",width=37,height=28,unit="cm", res=100, type = "cairo")
+
+#Ustalanie zakresu danych dla progów wartosciowych
+num_data@data$cutV3 <- cut(num_data@data$V3, breaks = c(at,Inf))
+
+#Rysowanie mapy
+# ~ xlim,ylim ograniczaja zakres mapy do europy
+# ~ colorkey, col.region definiuja zakres kolorów legendy
+# ~ sp.layout wczytuje mapę konturową na wierzch wykresu
 spplot(num_data["cutV3"], xlim=c(-11, 38), ylim=c(34, 71), main=list(label="Europa Xyear",cex=1.5), 
-        colorkey = list(height = 1, labels = list(at = seq(0.5, length(at) -0.5), labels = at)),col.regions=colorRampPalette(c("blue4","purple4", "yellow2", "red4")), #col.regions=rev(rainbow(24, start = 0, end = 12/24))
+        colorkey = list(height = 1, labels = list(at = seq(0.5, length(at) -0.5), labels = at)),col.regions=colorRampPalette(c("blue4","purple4", "yellow2", "red4")),
         sp.layout = list("sp.polygons", map1, first = F), contour = F)
+
+# Opis skali
 grid.text("Roczna skala emisji metanu (tony)", x=unit(0.99, "npc"), y=unit(0.50, "npc"), rot=-90, gp=gpar(fontsize=13,fontface=2))
 
 dev.off()
 
 
-#Petla do heatmap
+# Petla do mapy, uzywa do stworzenia sekwencji heatmap uzytych w gifie (w osobnym skrypcie)
+# Wykomentowana, poniewaz do dzialania wymagany jest pelen zestaw danych do gridmap (o wadze +2GB) 
+#
 # for(i in 0:38) {
 #   file.input <- paste0("v42_CH4_",1970+i,"_TOT.txt")
 #   title <- paste0("Europa rok ",1970+i)
