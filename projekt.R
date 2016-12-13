@@ -273,7 +273,6 @@ for (i in 1:nrow(sasiedzi)) {
       }
     else{
         lines(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",lwd=3, col = colors.plot[j])
-      axis(1, at = c(1970,1980,1990,2000), labels = c("1970-1980","1981-1990","1991-2000","2001-2008") )
       
         j <- j+1
         
