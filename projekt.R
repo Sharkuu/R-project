@@ -1,17 +1,26 @@
 options(prompt = "R: " )
-
+# zaladowanie bibliotek ----------------------------------------------------------------------
 library(lattice)
+library(maptools)
+library(png)
+library(grid)
+library(rworldmap)
 
+# przygotowanie danych ----------------------------------------------------------------------
+#wczytanie danych z pliku csv od danych dot. Europy
 data.ch4 <- read.csv2("v4.2_CH4_tot_1970_2008.csv",skip = 2051,stringsAsFactors = FALSE, header = F)
+#uzycie danych dot. tylko Europy
 data.ch4 <- data.ch4[0:879,]
+#usuniecie niepotrzebnych kolumn
 data.ch4$V1 <-NULL
 data.ch4$V2 <-NULL
 data.ch4$V46 <- NULL
+#ustawienie nazw kolumn z pliku
 names(data.ch4) <- sapply(read.csv2("v4.2_CH4_tot_1970_2008.csv")[9,3:45], as.character)
 na.omit(data.ch4)
 
-
-
+# EUROPA : srednie dekadowe emisje dla kazdego panstwa ----------------------------------------------------------------------
+#dataframe reprezentujacy dekadowe zestawienie srednich ze wszystkich emisji dla kazdego panstwa
 srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = (unique(data.ch4$ISO_A3)),
                                                         Name = unique(data.ch4$Name),
                                                         date1970.1980 = NA,
@@ -20,7 +29,7 @@ srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = (unique(data.ch
                                                         date2001.2008 = NA,
                                                         summary.mean = NA,stringsAsFactors=FALSE
                                                         )
-
+#wyliczanie srednich dekadowych
 for(i in unique(data.ch4$Name)){
   x<-data.ch4[data.ch4$Name == i,]
   s<-rowMeans(x[,5:15],na.rm = TRUE)
@@ -38,7 +47,10 @@ for(i in unique(data.ch4$Name)){
   
   
 }
+rm(i,s)
+#zmiana nazwy na potrzeby wykresu
 srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "MKD",2] <- "Macedonia"
+#podzial serbii i czarnogory na 3 osobne panstwa(kosowo,serbia, czarogora)
 srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "SCG",2] <- "Serbia"
 srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "SCG",1] <- "SRB"
 tmp <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$ISO_A3 == "SRB",]
@@ -48,10 +60,17 @@ srednie.wszystkie.panstwa.wszystkie.zrodla <- rbind(srednie.wszystkie.panstwa.ws
 tmp$ISO_A3 <- "KVX"
 tmp$Name <- "Kosovo"
 srednie.wszystkie.panstwa.wszystkie.zrodla <- rbind(srednie.wszystkie.panstwa.wszystkie.zrodla,tmp)
-#srednia calosciowa i segregowanie
+rm(tmp,x)
+
+
+
+#srednia calosciowa
 srednie.wszystkie.panstwa.wszystkie.zrodla$summary.mean <-rowMeans(srednie.wszystkie.panstwa.wszystkie.zrodla[,3:6])
+
+#sortowanie wg sredniej calosciowej
 srednie.wszystkie.panstwa.wszystkie.zrodla<- srednie.wszystkie.panstwa.wszystkie.zrodla[with(srednie.wszystkie.panstwa.wszystkie.zrodla, order(-summary.mean)), ]
-#barcharty 3 najwiekszych(w tym polska) 
+
+# EUROPA : barcharty - 3 panstwa o najwiekszej sredniej emisji w danej dekadzie ----------------------------------------------------------------------
 a <- barchart(date1970.1980 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,3)], col = "orange", main = "Najwieksza emisja lata 1970-1980",ylim = c(0:340), ylab = "Srednia [Gg]")
 b <- barchart(date1981.1990 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,4)], col = "orange", main = "Najwieksza emisja lata 1981-1990",ylim = c(0:340), ylab = "Srednia [Gg]")
 c <- barchart(date1991.2000 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,5)], col = "orange", main = "Najwieksza emisja lata 1991-2000",ylim = c(0:340), ylab = "Srednia [Gg]")
@@ -60,9 +79,10 @@ print(a, split = c(1,1,4,1), more = T)
 print(b, split = c(2,1,4,1), more = T)
 print(c, split = c(3,1,4,1), more = T)
 print(d, split = c(4,1,4,1))
+rm(a,b,c,d)
 
+# EUROPA : barcharty kazde panstwo - srednia emisja w danej dekadzie ----------------------------------------------------------------------
 
-######dotplot wszystkie panstwa wszystkie zrodla
 
 barchart(date1970.1980~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
          col = "orange",
@@ -101,12 +121,17 @@ barchart(date2001.2008~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
-##########polska emisje
+
+# POLSKA: srednie dekadowe dla kazdego zrodla emisji --------------------------------------------------------
+
 polska.srednie <-data.frame(zrodlo = unique(data.ch4$IPCC_description),
                             date1970.1980 = NA,
                             date1981.1990 = NA,
                             date1991.2000 =NA,
-                            date2001.2008 = NA)
+                            date2001.2008 = NA,
+                            summary.mean = NA
+                            )
+
 poland <- data.ch4[data.ch4$Name=='Poland',]
 na.omit(poland)
 for (i in unique(poland$IPCC_description)) {
@@ -125,8 +150,23 @@ for (i in unique(poland$IPCC_description)) {
   polska.srednie[polska.srednie$zrodlo == i,5] <-mean(s,na.rm = TRUE) 
   
 }
-#sortowanie
-#polska.srednie<- polska.srednie[with(polska.srednie, order(-date1970.1980)), ]
+rm(x,i,s)
+#srednia i sortowanie
+polska.srednie$summary.mean <-rowMeans(polska.srednie[,2:5])
+
+polska.srednie<- polska.srednie[with(polska.srednie, order(-summary.mean)), ]
+
+# POLSKA: srednia emisja od 1988 roku -------------------------------------
+
+
+polska88 <- colMeans(poland[,23:43], na.rm = TRUE)
+polska88 <- data.frame(as.list(polska88))
+names(polska88)<- c(1988:2008)
+rm(poland)
+
+# POLSKA: barcharty srednie dekadowe dla kazdego zrodla emisji ------------
+
+
 barchart(date1970.1980~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Polska lata 1970-1980",
@@ -163,10 +203,11 @@ barchart(date2001.2008~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
-#######polska po 88
-polska88 <- data.ch4[data.ch4$Name=='Poland',]
-polska88 <- colMeans(polska88[,23:43], na.rm = TRUE)
-#######dla kazdego zrodla, wszystkie panstwa, dekadowo
+
+# EUROPA : srednie dekadowe emisje dla kazdego zrodla ---------------------
+
+
+#dataframe reprezentujacy dekadowe zestawienie srednich ze wszystkich emisji dla kazdego zrodla
 srednie.wszystkie.zrodla = data.frame(zrodlo = unique(data.ch4$IPCC_description),
                                                         date1970.1980 = NA,
                                                         date1981.1990 = NA,
@@ -174,7 +215,7 @@ srednie.wszystkie.zrodla = data.frame(zrodlo = unique(data.ch4$IPCC_description)
                                                         date2001.2008 = NA,
                                                         summary.mean = NA
 )
-
+#wyliczanie srednich dekadowych
 for (i in unique(data.ch4$IPCC_description)) {
   x<-data.ch4[data.ch4$IPCC_description == i,]
   
@@ -191,12 +232,15 @@ for (i in unique(data.ch4$IPCC_description)) {
   srednie.wszystkie.zrodla[srednie.wszystkie.zrodla$zrodlo == i,5] <-mean(s,na.rm = TRUE) 
   
 }
-rm(s,x)
+rm(i,s,x)
 
 srednie.wszystkie.zrodla$summary.mean <-rowMeans(srednie.wszystkie.zrodla[,2:5])
 srednie.wszystkie.zrodla<- srednie.wszystkie.zrodla[with(srednie.wszystkie.zrodla, order(-summary.mean)), ]
 
-####wykresy zrodel wybranych(2 top 2 middle, 2 end) rocznie
+# EUROPA: wykresy wybranych emisji na przestrzeni lat ---------------------
+
+
+####wykresy zrodel wybranych(2 najwieksze emisje, 2 ze srodka rankingu, 2 z koncowki rankingu) rocznie
 j<-1
 for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
   tmp <- subset(data.ch4, data.ch4[,4] == as.name(i))
@@ -209,11 +253,17 @@ for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
     plot(names(tmp),tmp,type = "l", col = j, xlab = "rok",lwd=4, ylab = paste(as.name(i)," [Gg]"))
     j<- j+1
   }}
+rm(i,j,tmp)
 
-##sasiedzi
+# POLSKA: emisja na tle sasiadow ------------------------------------------
+
+
+#pobranie danych dotyczacych polski oraz sasiadow
 sasiedzi <- srednie.wszystkie.panstwa.wszystkie.zrodla[srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Germany" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Ukraine" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Czech Republic" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Slovakia" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Belarus" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Lithuania" | srednie.wszystkie.panstwa.wszystkie.zrodla$Name=="Poland",]
 j<-1
+#ustawienie kolorow lini na wykresach
 colors.plot <-c(1,2,"orange",4,5,6,"green")
+#pozwala wyswietlic legende poza granicami wykresu
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
@@ -231,6 +281,9 @@ for (i in 1:nrow(sasiedzi)) {
     
 }
 legend('topright','groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(2.5,2.5),col=colors.plot) 
+rm(i,j,colors.plot)
+
+# TO DLA PAWEUKA <33333333333333333333333 ---------------------------------
 
 
 # Mapka testy
@@ -240,9 +293,6 @@ legend('topright','groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(
 # c. Pomyslec czy mozna zrobic tak, zeby nazwy panstw sie nie zaslanialy
 #    (Customowe nazwy panstw i kooordynaty, zakomentowana opcja)
 # d. Plotowanie wartości przy panstwie?
-
-library(rworldmap)
-
 
 map.frame <- data.frame(
   country=srednie.wszystkie.panstwa.wszystkie.zrodla$Name,
@@ -263,7 +313,6 @@ mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTit
                            mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
                            aspect=1.5,borderCol = "gray20",oceanCol="lightcyan2",
                            catMethod =c(seq(0,400,by = 10)),addLegend = FALSE)
-#catMethod ="pretty"
 
 do.call( addMapLegend, c( mapParams, legendLabels="all", legendWidth=0.5 ))
 
@@ -349,9 +398,8 @@ dev.off()
 data.heat <- read.csv2("v42_CH4_1970_TOT.txt",skip = 3,stringsAsFactors = FALSE, header = F)
 num_data <- data.frame(data.matrix(data.heat))
 
-library(maptools)
-library(png)
-library(grid)
+
+
 
 
 map1 <- readShapePoly("CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp")
