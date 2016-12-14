@@ -142,22 +142,19 @@ polska.srednie <-data.frame(zrodlo = unique(data.ch4$IPCC_description),
 poland <- data.ch4[data.ch4$Name=='Poland',]
 na.omit(poland)
 for (i in unique(poland$IPCC_description)) {
-  x<-data.ch4[data.ch4$IPCC_description == i,]
+  x<-poland[poland$IPCC_description == i,]
   
-  s<-rowMeans(x[,5:15],na.rm = TRUE)
-  polska.srednie[polska.srednie$zrodlo == i,2] <-mean(s,na.rm = TRUE)
+
+  polska.srednie[polska.srednie$zrodlo == i,2] <-rowMeans(x[,5:15],na.rm = TRUE)
+
+  polska.srednie[polska.srednie$zrodlo == i,3] <-rowMeans(x[,12:25],na.rm = TRUE)
   
-  s<-rowMeans(x[,12:25],na.rm = TRUE)
-  polska.srednie[polska.srednie$zrodlo == i,3] <-mean(s,na.rm = TRUE) 
+  polska.srednie[polska.srednie$zrodlo == i,4] <-rowMeans(x[,22:35],na.rm = TRUE)
   
-  s<-rowMeans(x[,22:35],na.rm = TRUE)
-  polska.srednie[polska.srednie$zrodlo == i,4] <-mean(s,na.rm = TRUE)
-  
-  s<-rowMeans(x[,32:43],na.rm = TRUE)
-  polska.srednie[polska.srednie$zrodlo == i,5] <-mean(s,na.rm = TRUE) 
+  polska.srednie[polska.srednie$zrodlo == i,5] <-rowMeans(x[,32:43],na.rm = TRUE)
   
 }
-rm(x,i,s)
+rm(x,i)
 #srednia i sortowanie
 polska.srednie$summary.mean <-rowMeans(polska.srednie[,2:5])
 
@@ -178,7 +175,7 @@ barchart(date1970.1980~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
          col = "orange",
          main = "Polska lata 1970-1980",
          ylab = "Srednia [Gg]",
-         ylim = c(0:380),
+         ylim = c(0:4500),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -187,7 +184,7 @@ barchart(date1981.1990~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
          col = "orange",
          main = "Polska lata 1981-1990",
          ylab = "Srednia [Gg]",
-         ylim = c(0:380),
+         ylim = c(0:4500),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -196,7 +193,7 @@ barchart(date1991.2000~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
          col = "orange",
          main = "Polska lata 1991-2000",
          ylab = "Srednia [Gg]",
-         ylim = c(0:380),
+         ylim = c(0:4500),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
@@ -205,7 +202,7 @@ barchart(date2001.2008~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
          col = "orange",
          main = "Polska lata 2001-2008",
          ylab = "Srednia [Gg]",
-         ylim = c(0:380),
+         ylim = c(0:4500),
          panel=function(x,y,subscripts,...){
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
