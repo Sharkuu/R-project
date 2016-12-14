@@ -249,7 +249,7 @@ srednie.wszystkie.zrodla<- srednie.wszystkie.zrodla[with(srednie.wszystkie.zrodl
 
 ####wykresy zrodel wybranych(2 najwieksze emisje, 2 ze srodka rankingu, 2 z koncowki rankingu) rocznie
 j<-1
-for(i in srednie.wszystkie.zrodla[c(1,2,11,12,20,21),1]){
+for(i in srednie.wszystkie.zrodla[c(1,2,3,4,5),1]){
   tmp <- subset(data.ch4, data.ch4[,4] == as.name(i))
   tmp <- colMeans(tmp[,5:43],na.rm = TRUE)
   if(j==1){ 
