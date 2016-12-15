@@ -22,7 +22,7 @@ if(!dir.exists("Plots")) {
 }
 
 #wczytanie danych z pliku csv od danych dot. Europy
-data.ch4 <- read.csv2("v4.2_CH4_tot_1970_2008.csv",skip = 2051,stringsAsFactors = FALSE, header = F)
+data.ch4 <- read.csv2("Data/v4.2_CH4_tot_1970_2008.csv",skip = 2051,stringsAsFactors = FALSE, header = F)
 #uzycie danych dot. tylko Europy
 data.ch4 <- data.ch4[0:879,]
 #usuniecie niepotrzebnych kolumn
@@ -30,7 +30,7 @@ data.ch4$V1 <-NULL
 data.ch4$V2 <-NULL
 data.ch4$V46 <- NULL
 #ustawienie nazw kolumn z pliku
-names(data.ch4) <- sapply(read.csv2("v4.2_CH4_tot_1970_2008.csv")[9,3:45], as.character)
+names(data.ch4) <- sapply(read.csv2("Data/v4.2_CH4_tot_1970_2008.csv")[9,3:45], as.character)
 na.omit(data.ch4)
 
 # EUROPA (OBLICZENIA) : srednie dekadowe emisje dla kazdego panstwa ) ----------------------------------------------------------------------
@@ -449,7 +449,7 @@ dev.off()
 # EUROPA (PLOT7): Mapy drugiego typu, Heatmapa ----
 
 # Wczytywanie danych do heatmapy, dla roku 1970
-data.heat <- read.csv2("v42_CH4_1970_TOT.txt",skip = 3,stringsAsFactors = FALSE, header = F)
+data.heat <- read.csv2("Data/v42_CH4_1970_TOT.txt",skip = 3,stringsAsFactors = FALSE, header = F)
 # Zmiana typu danych na numeric
 num_data <- data.frame(data.matrix(data.heat))
 
@@ -458,7 +458,7 @@ num_data <- data.frame(data.matrix(data.heat))
 # Mapa pobrana ze strony http://ec.europa.eu/
 # http://ec.europa.eu/eurostat/cache/GISCO/geodatafiles/CNTR_2014_03M.zip
 
-map1 <- readShapePoly("CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp")
+map1 <- readShapePoly("Data/CNTR_2014_03M_SH/Data/CNTR_RG_03M_2014.shp")
 
 # Konwertuje wspolrzedne do typu Spatial object
 coordinates(num_data) <- ~V2+V1  
