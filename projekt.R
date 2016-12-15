@@ -13,7 +13,14 @@ library(png)
 library(grid)
 library(rworldmap)
 
-# przygotowanie danych ----------------------------------------------------------------------
+  
+# Przygotowanie danych ----------------------------------------------------------------------
+
+#Tworzy folder na wykresy, jezeli nie zostal stworzony
+if(!dir.exists("Plots")) {
+  dir.create("Plots")
+}
+
 #wczytanie danych z pliku csv od danych dot. Europy
 data.ch4 <- read.csv2("v4.2_CH4_tot_1970_2008.csv",skip = 2051,stringsAsFactors = FALSE, header = F)
 #uzycie danych dot. tylko Europy
@@ -26,7 +33,7 @@ data.ch4$V46 <- NULL
 names(data.ch4) <- sapply(read.csv2("v4.2_CH4_tot_1970_2008.csv")[9,3:45], as.character)
 na.omit(data.ch4)
 
-# EUROPA : srednie dekadowe emisje dla kazdego panstwa ----------------------------------------------------------------------
+# EUROPA (OBLICZENIA) : srednie dekadowe emisje dla kazdego panstwa ) ----------------------------------------------------------------------
 #dataframe reprezentujacy dekadowe zestawienie srednich ze wszystkich emisji dla kazdego panstwa
 srednie.wszystkie.panstwa.wszystkie.zrodla = data.frame(ISO_A3 = (unique(data.ch4$ISO_A3)),
                                                         Name = unique(data.ch4$Name),
@@ -77,7 +84,11 @@ srednie.wszystkie.panstwa.wszystkie.zrodla$summary.mean <-rowMeans(srednie.wszys
 #sortowanie wg sredniej calosciowej
 srednie.wszystkie.panstwa.wszystkie.zrodla<- srednie.wszystkie.panstwa.wszystkie.zrodla[with(srednie.wszystkie.panstwa.wszystkie.zrodla, order(-summary.mean)), ]
 
-# EUROPA : barcharty - 3 panstwa o najwiekszej sredniej emisji w danej dekadzie ----------------------------------------------------------------------
+
+# EUROPA (PLOT1): barcharty - 3 panstwa o najwiekszej sredniej emisji w danej dekadzie ----------------------------------------------------------------------
+png(file="Plots/Plot1_Europa_3_najwieksze_emisje.png",width=35,height=20,unit="cm", res=100, type = "cairo")
+
+
 a <- barchart(date1970.1980 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,3)], col = "orange", main = "Najwieksza emisja lata 1970-1980",ylim = c(0:340), ylab = "Srednia [Gg]")
 b <- barchart(date1981.1990 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,4)], col = "orange", main = "Najwieksza emisja lata 1981-1990",ylim = c(0:340), ylab = "Srednia [Gg]")
 c <- barchart(date1991.2000 ~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla[1:3,c(2,5)], col = "orange", main = "Najwieksza emisja lata 1991-2000",ylim = c(0:340), ylab = "Srednia [Gg]")
@@ -88,10 +99,12 @@ print(c, split = c(3,1,4,1), more = T)
 print(d, split = c(4,1,4,1))
 rm(a,b,c,d)
 
-# EUROPA : barcharty kazde panstwo - srednia emisja w danej dekadzie ----------------------------------------------------------------------
+dev.off()
+
+# EUROPA (PLOT2): barcharty kazde panstwo - srednia emisja w danej dekadzie ----------------------------------------------------------------------
 
 
-barchart(date1970.1980~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
+plot.emisja.1 <- barchart(date1970.1980~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Srednie wartosci emisji lata 1970-1980",
          ylab = "Srednia [Gg]",
@@ -101,7 +114,11 @@ barchart(date1970.1980~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
              panel.barchart(x,y,...)
          })
 
-barchart(date1981.1990~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
+png(file="Plots/Plot2_emisja_1970-80.png",width=35,height=20,unit="cm", res=150, type = "cairo")
+print(plot.emisja.1)
+dev.off()
+
+plot.emisja.2 <- barchart(date1981.1990~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Srednie wartosci emisji lata 1981-1990",
          ylab = "Srednia [Gg]",
@@ -110,7 +127,12 @@ barchart(date1981.1990~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
-barchart(date1991.2000~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
+
+png(file="Plots/Plot2_emisja_1981-90.png",width=35,height=20,unit="cm", res=150, type = "cairo")
+print(plot.emisja.2)
+dev.off()
+
+plot.emisja.3 <- barchart(date1991.2000~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Srednie wartosci emisji lata 1991-2000",
          ylab = "Srednia [Gg]",
@@ -119,7 +141,12 @@ barchart(date1991.2000~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
-barchart(date2001.2008~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
+
+png(file="Plots/Plot2_emisja_1991-00.png",width=35,height=20,unit="cm", res=150, type = "cairo")
+print(plot.emisja.3)
+dev.off()
+
+plot.emisja.4 <- barchart(date2001.2008~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Srednie wartosci emisji lata 2001-2008",
          ylab = "Srednia [Gg]",
@@ -129,7 +156,11 @@ barchart(date2001.2008~ Name, data = srednie.wszystkie.panstwa.wszystkie.zrodla,
            panel.barchart(x,y,...)
          })
 
-# POLSKA: srednie dekadowe dla kazdego zrodla emisji --------------------------------------------------------
+png(file="Plots/Plot2_emisja_2001-08.png",width=35,height=20,unit="cm", res=150, type = "cairo")
+print(plot.emisja.4)
+dev.off()
+
+# POLSKA (OBLICZENIA): srednie dekadowe dla kazdego zrodla emisji  --------------------------------------------------------
 
 polska.srednie <-data.frame(zrodlo = unique(data.ch4$IPCC_description),
                             date1970.1980 = NA,
@@ -160,7 +191,7 @@ polska.srednie$summary.mean <-rowMeans(polska.srednie[,2:5])
 
 polska.srednie<- polska.srednie[with(polska.srednie, order(-summary.mean)), ]
 
-# POLSKA: srednia emisja od 1988 roku -------------------------------------
+# POLSKA (OBLICZENIA): srednia emisja od 1988 roku -------------------------------------
 
 
 polska88 <- colMeans(poland[,23:43], na.rm = TRUE)
@@ -168,10 +199,10 @@ polska88 <- data.frame(as.list(polska88))
 names(polska88)<- c(1988:2008)
 rm(poland)
 
-# POLSKA: barcharty srednie dekadowe dla kazdego zrodla emisji ------------
+# POLSKA (PLOT3): barcharty srednie dekadowe dla kazdego zrodla emisji ------------
 
 
-barchart(date1970.1980~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
+plot.pl.zrodla.1 <- barchart(date1970.1980~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Polska lata 1970-1980",
          ylab = "Srednia [Gg]",
@@ -180,7 +211,13 @@ barchart(date1970.1980~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
-barchart(date1981.1990~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
+
+
+png(file="Plots/Plot3_pl-zrodla_1970-80.png",width=35,height=20,unit="cm", res=150, type = "cairo")
+print(plot.pl.zrodla.1)
+dev.off()
+
+plot.pl.zrodla.2 <-barchart(date1981.1990~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Polska lata 1981-1990",
          ylab = "Srednia [Gg]",
@@ -189,7 +226,13 @@ barchart(date1981.1990~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
-barchart(date1991.2000~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
+
+
+png(file="Plots/Plot3_pl-zrodla_1981-90.png",width=35,height=20,unit="cm", res=150, type = "cairo")
+print(plot.pl.zrodla.2)
+dev.off()
+
+plot.pl.zrodla.3 <- barchart(date1991.2000~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Polska lata 1991-2000",
          ylab = "Srednia [Gg]",
@@ -198,7 +241,12 @@ barchart(date1991.2000~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
            panel.grid(h=15,v=0) 
            panel.barchart(x,y,...)
          })
-barchart(date2001.2008~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
+
+png(file="Plots/Plot3_pl-zrodla_1991-00.png",width=35,height=20,unit="cm", res=150, type = "cairo")
+print(plot.pl.zrodla.3)
+dev.off()
+
+plot.pl.zrodla.4 <- barchart(date2001.2008~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)),
          col = "orange",
          main = "Polska lata 2001-2008",
          ylab = "Srednia [Gg]",
@@ -208,7 +256,11 @@ barchart(date2001.2008~ zrodlo, data = polska.srednie,scales=list(x=list(rot=45)
            panel.barchart(x,y,...)
          })
 
-# EUROPA : srednie dekadowe emisje dla kazdego zrodla ---------------------
+png(file="Plots/Plot3_pl-zrodla_2001-08.png",width=35,height=20,unit="cm", res=150, type = "cairo")
+print(plot.pl.zrodla.4)
+dev.off()
+
+# EUROPA (OBLICZENIA): srednie dekadowe emisje dla kazdego zrodla ---------------------
 
 
 #dataframe reprezentujacy dekadowe zestawienie srednich ze wszystkich emisji dla kazdego zrodla
@@ -241,24 +293,22 @@ rm(i,s,x)
 srednie.wszystkie.zrodla$summary.mean <-rowMeans(srednie.wszystkie.zrodla[,2:5])
 srednie.wszystkie.zrodla<- srednie.wszystkie.zrodla[with(srednie.wszystkie.zrodla, order(-summary.mean)), ]
 
-# EUROPA: wykresy wybranych emisji na przestrzeni lat ---------------------
+# EUROPA (PLOT4): wykresy wybranych emisji na przestrzeni lat ---------------------
 
 
 ####wykresy zrodel wybranych(2 najwieksze emisje, 2 ze srodka rankingu, 2 z koncowki rankingu) rocznie
 j<-1
 for(i in srednie.wszystkie.zrodla[c(1,2,3,4,5),1]){
+  png(file=paste0("Plots/Plot4_wybrane_zrodla_",i,".png"),width=25,height=20,unit="cm", res=150, type = "cairo")
   tmp <- subset(data.ch4, data.ch4[,4] == as.name(i))
   tmp <- colMeans(tmp[,5:43],na.rm = TRUE)
-  if(j==1){ 
-    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok",lwd=4, ylab = paste(as.name(i)," [Gg]"))
-    j<-j+1
-  }else{
-    plot(names(tmp),tmp,type = "l", col = j, xlab = "rok",lwd=4, ylab = paste(as.name(i)," [Gg]"))
-    j<- j+1
-  }}
+  plot(names(tmp),tmp,type = "l", col = j, xlab = "rok",lwd=4, ylab = paste(as.name(i)," [Gg]"))
+  dev.off()
+  j<- j+1
+  }
 rm(i,j,tmp)
 
-# POLSKA: emisja na tle sasiadow ------------------------------------------
+# POLSKA (PLOT5): emisja na tle sasiadow ------------------------------------------
 
 
 #pobranie danych dotyczacych polski oraz sasiadow
@@ -268,6 +318,7 @@ j<-1
 colors.plot <-c(1,2,"orange",4,5,6,"green")
 #pozwala wyswietlic legende poza granicami wykresu
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+png(file="Plots/Plot5_sasiedzi.png",width=25,height=20,unit="cm", res=150, type = "cairo")
 for (i in 1:nrow(sasiedzi)) {
     if(j==1){
         plot(c(1970,1980,1990,2000),sasiedzi[i,3:6], type = "o",lwd=3,xaxt = "n", col = colors.plot[j],ylim = c(0,350), ylab = "Srednia [Gg]", xlab = "Dekada", main = "Polska na tle sasiadow")
@@ -282,10 +333,11 @@ for (i in 1:nrow(sasiedzi)) {
     }
     
 }
-legend('topright','groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(2.5,2.5),col=colors.plot) 
+legend("center",'groups',inset=c(-0.2,-0.2), sasiedzi$Name, lty=c(1,1), lwd=c(2.5,2.5),col=colors.plot) 
+dev.off()
 rm(i,j,colors.plot)
 
-# Mapa konturowa panstw ze srednimi wartosciami emisji ------------------------------------------
+# EUROPA (PLOT6): Mapa konturowa panstw ze srednimi wartosciami emisji ------------------------------------------
 
 # Europa 1970-1980
 
@@ -301,7 +353,7 @@ converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinC
 
 
 # Zapis do pliku PDF
-pdf('Europa_rozklad70-80.pdf')
+pdf('Plots/Plot6_Europa_rozklad_1970-80.pdf')
 
 # Funkcja z biblioteki rworldmap, rysujaca mape Europy
 mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1970-1980",
@@ -319,7 +371,7 @@ labelCountries(dF = "",nameCountryColumn = "NAME",nameX = "LON",nameY = "LAT",
 
 dev.off()
 
-######
+###
 # Kopia kodu opisanego powyzej
 # Europa 1981-1990
 
@@ -330,7 +382,7 @@ map.frame <- data.frame(
 converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
 
 
-pdf('Europa_rozklad81-90.pdf')
+pdf('Plots/Plot6_Europa_rozklad1981-90.pdf')
 
 mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1981-1990",
                            mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
@@ -354,7 +406,7 @@ map.frame <- data.frame(
 converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
 
 
-pdf('Europa_rozklad91-00.pdf')
+pdf('Plots/Plot6_Europa_rozklad1991-00.pdf')
 
 mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1991-2000",
                            mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
@@ -378,7 +430,7 @@ map.frame <- data.frame(
 converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
 
 
-pdf('Europa_rozklad01-08.pdf')
+pdf('Plots/Plot6_Europa_rozklad2001-08.pdf')
 
 mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 2001-2008",
                            mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
@@ -394,9 +446,9 @@ dev.off()
 
 
 
-# Mapy drugiego typu, Heatmapa
+# EUROPA (PLOT7): Mapy drugiego typu, Heatmapa ----
 
-# Wczytywanie danych do heatmapy
+# Wczytywanie danych do heatmapy, dla roku 1970
 data.heat <- read.csv2("v42_CH4_1970_TOT.txt",skip = 3,stringsAsFactors = FALSE, header = F)
 # Zmiana typu danych na numeric
 num_data <- data.frame(data.matrix(data.heat))
@@ -413,10 +465,10 @@ coordinates(num_data) <- ~V2+V1
 gridded(num_data) <- TRUE
 
 # Ustalanie wartosci progów
-at <- c(0e+0, 1.5e-5, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0e+0, 2.0e+0,5.0e+0, 1.0e+1,5.0e+1, 1.0e+2, 2.0e+2,5.0e+2,1.0e+3,5.0e+3)
+at <- c(0e+0, 1.5e-5, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0e+0, 2.0e+0,5.0e+0, 1.0e+1,50,100,150,200,250,300,400,500,800,1000,1500,2000,5000)
 
 # Zapis mapy do pliku PNG
-png(file="HeatMap.png",width=37,height=28,unit="cm", res=100, type = "cairo")
+png(file="Plots/Plot7_HeatMap_1970.png",width=37,height=28,unit="cm", res=100, type = "cairo")
 
 #Ustalanie zakresu danych dla progów wartosciowych
 num_data@data$cutV3 <- cut(num_data@data$V3, breaks = c(at,Inf))
@@ -425,7 +477,7 @@ num_data@data$cutV3 <- cut(num_data@data$V3, breaks = c(at,Inf))
 # ~ xlim,ylim ograniczaja zakres mapy do europy
 # ~ colorkey, col.region definiuja zakres kolorów legendy
 # ~ sp.layout wczytuje mapę konturową na wierzch wykresu
-spplot(num_data["cutV3"], xlim=c(-11, 38), ylim=c(34, 71), main=list(label="Europa Xyear",cex=1.5), 
+spplot(num_data["cutV3"], xlim=c(-11, 38), ylim=c(34, 71), main=list(label="Europa 1970",cex=1.5), 
         colorkey = list(height = 1, labels = list(at = seq(0.5, length(at) -0.5), labels = at)),col.regions=colorRampPalette(c("blue4","purple4", "yellow2", "red4")),
         sp.layout = list("sp.polygons", map1, first = F), contour = F)
 
@@ -437,6 +489,8 @@ dev.off()
 
 # Petla do mapy, uzywa do stworzenia sekwencji heatmap uzytych w gifie (w osobnym skrypcie)
 # Wykomentowana, poniewaz do dzialania wymagany jest pelen zestaw danych do gridmap (o wadze +2GB) 
+# Pelne dane dostepne tutaj:
+# http://edgar.jrc.ec.europa.eu/gallery.php?release=v42&substance=CH4&sector=TOTALS
 #
 # for(i in 0:38) {
 #   file.input <- paste0("v42_CH4_",1970+i,"_TOT.txt")
