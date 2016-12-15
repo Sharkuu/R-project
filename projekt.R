@@ -382,7 +382,7 @@ map.frame <- data.frame(
 converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
 
 
-pdf('Plots/Plot6_Europa_rozklad1981-90.pdf')
+pdf('Plots/Plot6_Europa_rozklad_1981-90.pdf')
 
 mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1981-1990",
                            mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
@@ -406,7 +406,7 @@ map.frame <- data.frame(
 converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
 
 
-pdf('Plots/Plot6_Europa_rozklad1991-00.pdf')
+pdf('Plots/Plot6_Europa_rozklad_1991-00.pdf')
 
 mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 1991-2000",
                            mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
@@ -430,7 +430,7 @@ map.frame <- data.frame(
 converted.map.frame <- joinCountryData2Map(map.frame, joinCode="NAME", nameJoinColumn="country")
 
 
-pdf('Plots/Plot6_Europa_rozklad2001-08.pdf')
+pdf('Plots/Plot6_Europa_rozklad_2001-08.pdf')
 
 mapParams <-mapCountryData(converted.map.frame, nameColumnToPlot="value", mapTitle="Europa 2001-2008",
                            mapRegion="Europe", colourPalette="heat",missingCountryCol = "dark grey",
